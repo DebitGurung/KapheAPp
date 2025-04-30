@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "968858113254",
+    "project_id": "kaphe-a1d34",
+    "storage_bucket": "kaphe-a1d34.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968858113254:android:0e57b5cbbcb3ede4681727",
+        "android_client_info": {
+          "package_name": "com.example.kapheapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "968858113254-bobkdlvb2nmhv4hc9e10ljfdfajgobhm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdQSm2KB-pH0ntRAnhKptH3aLGIorl0bM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "968858113254-bobkdlvb2nmhv4hc9e10ljfdfajgobhm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "968858113254-9u46urdrte75kge8ecdo7n09q56r8spm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.kapheapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968858113254:android:81066e06e577704f681727",
+        "android_client_info": {
+          "package_name": "com.kaphe.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "968858113254-uoam48h0re2clifjutflj9d8ouu8jah5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kaphe.com",
+            "certificate_hash": "77d5149d0b66646a91595bc820e0b96328ef5d34"
+          }
+        },
+        {
+          "client_id": "968858113254-bobkdlvb2nmhv4hc9e10ljfdfajgobhm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdQSm2KB-pH0ntRAnhKptH3aLGIorl0bM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "968858113254-bobkdlvb2nmhv4hc9e10ljfdfajgobhm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "968858113254-9u46urdrte75kge8ecdo7n09q56r8spm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.kapheapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

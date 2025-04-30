@@ -1,0 +1,231 @@
+// ignore_for_file: depend_on_referenced_packages
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+import '../../../exceptions/firebase/firebase_auth_exception.dart';
+import '../../../exceptions/firebase/firebase_exception.dart';
+import '../../../exceptions/format/format_exception.dart';
+import '../../../exceptions/platform/platform_exception.dart';
+import '../../../features/authentication/screens/login/login.dart';
+import '../../../features/authentication/screens/onBoarding/onboarding.dart';
+import '../../../features/authentication/screens/signup/verify_email.dart';
+import '../../../navigation/navigation_menu.dart';
+import '../user/user_repository.dart';
+
+class AuthenticationRepository extends GetxController {
+  static AuthenticationRepository get instance => Get.find();
+
+  //variables
+  final deviceStorage = GetStorage();
+  final _auth = FirebaseAuth.instance;
+
+  //get authenticated user
+  User? get authUser => _auth.currentUser;
+
+  //called from main.dart in app launch
+  @override
+  void onReady() {
+    FlutterNativeSplash.remove();
+    Future.delayed(const Duration(milliseconds: 300), () {
+      screenRedirect();
+    });  }
+
+  //redirect to screen based on authentication
+  void screenRedirect() async {
+    try {
+      final isFirstTime = deviceStorage.read('isFirstTime') as bool? ?? true;
+      final user = _auth.currentUser;
+
+      if (user != null) {
+        // Handle logged-in users
+        if (!user.emailVerified) {
+          Get.offAll(() => VerifyEmailScreen(email: user.email));
+        } else {
+          Get.offAll(() => const NavigationMenu());
+        }
+      } else {
+        // Handle first-time vs returning users
+        if (isFirstTime) {
+          Get.offAll(() => const OnBoardingScreen());
+          deviceStorage.write('isFirstTime', false); // Mark onboarding completed
+        } else {
+          Get.offAll(() => const LoginScreen());
+        }
+      }
+    } catch (e) {
+      Get.offAll(() => const OnBoardingScreen());
+    }
+  }
+
+  //login with email and password
+
+  Future<UserCredential> loginWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      return await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again.';
+    }
+  }
+  //register with email and password
+
+  Future<UserCredential> registerWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      return await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again.';
+    }
+  }
+
+//sending email for verification
+  Future<void> sendEmailVerification() async {
+    try {
+      await _auth.currentUser?.sendEmailVerification();
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Could not send email verification. Please try again.';
+    }
+  }
+
+  /* --------------------------- Federated Identity & Social Sign-In --------------------------- */
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      //triggers the authentication file
+      final  GoogleSignInAccount? userAccount = await GoogleSignIn().signIn();
+      if (userAccount == null) throw TPlatformException('Sign-in cancelled');
+
+      final googleAuth = await userAccount.authentication;
+      final credentials = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      return await _auth.signInWithCredential(credentials);
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    }on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    }on FormatException  catch(_){
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      if (kDebugMode) print('Something went wrong: $e');
+      return null;
+    }
+  }
+
+  /* --------------------------- Logout & Delete Account --------------------------- */
+  Future<void> logout() async {
+    try {
+      await GoogleSignIn().signOut();
+      await FirebaseAuth.instance.signOut();
+      Get.offAll(() => const LoginScreen());
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Error signing out. Please try again.';
+    }
+  }
+
+/*Email authentication forgot password*/
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Could not send password reset email. Please try again.';
+    }
+  }
+
+  //re-authenticate user
+  Future<void> reAuthenticateEmailAndPassword(
+      String email, String password) async {
+    try {
+      //create credential
+      AuthCredential credential =
+          EmailAuthProvider.credential(email: email, password: password);
+
+      //re-authenticate
+      await _auth.currentUser?.reauthenticateWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
+  //delete user account
+  Future<void> deleteAccount() async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) throw TFirebaseAuthException('no_user');
+
+      await _auth.currentUser!.delete();
+      await UserRepository.instance.removeUserRecord(_auth.currentUser!.uid);
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    }on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    }catch (e) {
+      throw TFirebaseException('delete_failed');
+    }
+  }
+}
