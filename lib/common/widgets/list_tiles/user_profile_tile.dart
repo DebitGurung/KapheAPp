@@ -28,14 +28,14 @@ class TUserProfileTile extends StatelessWidget {
           padding: 0,
         ),
         title: Text(
-         controller.user.value.fullName, // Handle null case
+          user.fullName, // Use local 'user' variable
           style: Theme.of(context)
               .textTheme
               .headlineSmall!
               .apply(color: TColors.white),
         ),
         subtitle: Text(
-          controller.user.value.email, // Handle null case
+          user.email, // Use local 'user' variable
           style: Theme.of(context)
               .textTheme
               .bodyMedium!

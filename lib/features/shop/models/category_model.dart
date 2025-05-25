@@ -1,50 +1,59 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CategoryModel {
-  String id;
-  String name;
-  String image;
-  String parentId;
-  bool isFeatured;
+  final String id;
+  final String name;
+  late final String image;
+  final String parentId;
+  final bool isFeatured;
 
-  CategoryModel(
-      {required this.id,
-      required this.name,
-      required this.image,
-      this.parentId = '',
-      required this.isFeatured});
+  CategoryModel({
+    required this.id,
+    required this.name,
+    required this.image,
+    this.parentId = '',
+    required this.isFeatured,
+  });
 
-  //empty helper function
+  CategoryModel copyWith({
+    String? id,
+    String? name,
+    String? image,
+    String? parentId,
+    bool? isFeatured,
+  }) {
+    return CategoryModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      image: image ?? this.image,
+      parentId: parentId ?? this.parentId,
+      isFeatured: isFeatured ?? this.isFeatured,
+    );
+  }
+
   static CategoryModel empty() =>
-      CategoryModel(id: "", name: "", image: "", isFeatured: false);
-
-  //convert model to json structure so that you can store data in firestore
+      CategoryModel(id: '', name: '', image: '', isFeatured: false);
 
   Map<String, dynamic> toJson() {
     return {
-      'Name': name,
-      'Image': image,
-      'ParentId': parentId,
-      'IsFeatured': isFeatured,
+      'name': name,
+      'image': image,
+      'parentId': parentId,
+      'isFeatured': isFeatured,
     };
   }
 
-//map json oriented document snapshot from firebase to userModel
-  factory CategoryModel.fromSnapshot(
-      DocumentSnapshot<Map<String, dynamic>> document) {
-    if (document.data() != null) {
-      final data = document.data()!;
-
-      //map json record to the model
+  factory CategoryModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+    final data = document.data();
+    if (data != null) {
       return CategoryModel(
         id: document.id,
-        name: data['Name'] ?? '',
-        image: data['Image'] ?? '',
-        parentId: data['ParentId'] ?? '',
-        isFeatured: data['IsFeatured'] ?? false,
+        name: data['name'] as String? ?? '', // Fixed: Use 'name' instead of 'determination'
+        image: data['image'] as String? ?? '',
+        parentId: data['parentId'] as String? ?? '',
+        isFeatured: data['isFeatured'] as bool? ?? false,
       );
-    } else {
-      return CategoryModel.empty();
     }
+    return CategoryModel.empty();
   }
 }

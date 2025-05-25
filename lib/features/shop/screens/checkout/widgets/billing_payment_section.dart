@@ -1,46 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:kapheapp/common/widgets/custom_shapes/rounded_container.dart';
 import 'package:kapheapp/common/widgets/text/section_heading.dart';
 
 import '../../../../../utils/constants/colors.dart';
-import '../../../../../utils/constants/image_strings.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/helpers/helper_functions.dart';
+import '../../../controllers/checkout/checkout_controller.dart';
 
 class TBillingPaymentSection extends StatelessWidget {
   const TBillingPaymentSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(CheckoutController());
     final dark = THelperFunctions.isDarkMode(context);
     return Column(
       children: [
         TSectionHeading(
           title: 'Payment method',
           buttonTitle: 'Change',
-          onPressed: () {},
+          onPressed: () => controller.selectPaymentMethod(context),
         ),
         const SizedBox(
           height: TSizes.spaceBtwItems / 2,
         ),
-        Row(
-          children: [
-            TRoundedContainer(
-                width: 60,
-                height: 35,
-                backgroundColor: dark ? TColors.light : TColors.white,
-                padding: const EdgeInsets.all(TSizes.sm),
-                child: const Image(
-                  image: AssetImage(TImages.payment),
-                )),
-            const SizedBox(
-              width: TSizes.spaceBtwItems / 2,
-            ),
-            Text(
-              'Esewa',
-              style: Theme.of(context).textTheme.bodyLarge,
-            )
-          ],
+        Obx(
+            () => Row(
+            children: [
+              TRoundedContainer(
+                  width: 60,
+                  height: 35,
+                  backgroundColor: dark ? TColors.light : TColors.white,
+                  padding: const EdgeInsets.all(TSizes.sm),
+                  child:  Image(
+                    image: AssetImage(controller.selectedPaymentMethod.value.image),fit: BoxFit.contain)
+                  ),
+              const SizedBox(
+                width: TSizes.spaceBtwItems / 2,
+              ),
+              Text(
+                controller.selectedPaymentMethod.value.name,
+                style: Theme.of(context).textTheme.bodyLarge,
+              )
+            ],
+          ),
         )
       ],
     );

@@ -7,7 +7,6 @@ import 'package:kapheapp/utils/constants/text_strings.dart';
 import 'package:kapheapp/utils/effect/shimmer.dart';
 
 import '../../../../../common/widgets/products/product_cart/cart_menu_icon.dart';
-import '../../cart/cart.dart';
 
 class THomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const THomeAppBar({super.key});
@@ -23,7 +22,7 @@ class THomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             TText.homeAppBarTitle,
             style: Theme.of(
               context,
-            ).textTheme.headlineMedium!.apply(color: TColors.grey),
+            ).textTheme.headlineMedium!.apply(color: TColors.orange),
           ),
           Obx(() {
             if (controller.profileLoading.value) {
@@ -35,7 +34,7 @@ class THomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 style: Theme.of(context)
                     .textTheme
                     .labelMedium!
-                    .apply(color: TColors.white),
+                    .apply(color: TColors.orange),
               );
             }
           }),
@@ -43,8 +42,9 @@ class THomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         TCartCounterIcon(
-          onPress: () => Get.to(() => const CartScreen()),
           iconColor: TColors.white,
+          counterBgColor: TColors.orange,
+          counterTextColor: TColors.white,
         ),
       ],
     );

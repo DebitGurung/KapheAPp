@@ -3,6 +3,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:kapheapp/bindings/general_bindings.dart';
 import 'package:kapheapp/routes/app_routes.dart';
 import 'package:kapheapp/utils/constants/colors.dart';
+import 'package:kapheapp/utils/helpers/helper_functions.dart';
 import 'package:kapheapp/utils/theme/theme.dart';
 
 class App extends StatelessWidget {
@@ -10,6 +11,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = THelperFunctions.isDarkMode(context);
     return GetMaterialApp(
       themeMode: ThemeMode.system,
       theme: TAppTheme.lightTheme,
@@ -21,9 +23,9 @@ class App extends StatelessWidget {
       initialBinding: GeneralBindings(),
 
       getPages: AppRoutes.pages,
-      home: const Scaffold(
-        backgroundColor: TColors.white,
-        body: Center(child: CircularProgressIndicator(color: Colors.orange)),
+      home: Scaffold(
+        backgroundColor: dark ? TColors.white : TColors.dark ,
+        body: const Center(child: CircularProgressIndicator(color: Colors.orange)),
       ),
     );
   }

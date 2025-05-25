@@ -1,7 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
-import '../../../utils/constants/sizes.dart';
-
+import 'package:kapheapp/utils/constants/sizes.dart';
 
 class TRoundedImage extends StatelessWidget {
   const TRoundedImage({
@@ -38,10 +37,39 @@ class TRoundedImage extends StatelessWidget {
         width: width,
         height: height,
         padding: padding,
-        decoration: BoxDecoration(border: border, color: backgroundColor, borderRadius: BorderRadius.circular(borderRadius)),
+        decoration: BoxDecoration(
+          border: border,
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
         child: ClipRRect(
-          borderRadius: applyImageRadius ? BorderRadius.circular(borderRadius): BorderRadius.zero,
-          child:  Image(fit: fit, image: isNetworkImage ? NetworkImage (imageUrl) : AssetImage(imageUrl) as ImageProvider),
+          borderRadius: applyImageRadius
+              ? BorderRadius.circular(borderRadius)
+              : BorderRadius.zero,
+          child: isNetworkImage && imageUrl.isNotEmpty
+              ? CachedNetworkImage(
+            imageUrl: imageUrl,
+            fit: fit,
+            width: width,
+            height: height,
+            progressIndicatorBuilder: (context, url, progress) =>
+            const SizedBox(
+                width: double.infinity,
+                height: 190,
+                child: CircularProgressIndicator()),
+            errorWidget: (context, url, error) =>
+            const Icon(Icons.error, color: Colors.red),
+          )
+              : Image.asset(
+            imageUrl.isNotEmpty
+                ? imageUrl
+                : 'assets/images/placeholder.png',
+            fit: fit,
+            width: width,
+            height: height,
+            errorBuilder: (context, error, stackTrace) =>
+            const Icon(Icons.image_not_supported, color: Colors.grey),
+          ),
         ),
       ),
     );

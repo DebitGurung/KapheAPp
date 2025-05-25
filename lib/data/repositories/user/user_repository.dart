@@ -9,7 +9,7 @@ import 'package:kapheapp/data/repositories/authentication/authentication_reposit
 import '../../../exceptions/firebase/firebase_exception.dart';
 import '../../../exceptions/format/format_exception.dart';
 import '../../../exceptions/platform/platform_exception.dart';
-import 'user_model.dart';
+import '../../../features/shop/models/user_model.dart';
 
 class UserRepository {
   static UserRepository get instance => Get.find();

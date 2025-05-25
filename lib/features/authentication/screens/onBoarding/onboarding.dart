@@ -34,7 +34,7 @@ class OnBoardingScreen extends StatelessWidget {
               subTitle: TText.onBoardingSubTitle2,
             ),
             OnBoardingPage(
-              image: TImages.onBoardingImage2,
+              image: TImages.onBoardingImage3,
               title: TText.onBoardingTitle3,
               subTitle: TText.onBoardingSubTitle3,
             ),

@@ -10,9 +10,12 @@ import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/image_strings.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/helpers/helper_functions.dart';
+import '../../../models/cafe_model.dart';
 
 class TLocationMetaData extends StatelessWidget {
-  const TLocationMetaData({super.key});
+  const TLocationMetaData({super.key, required this.cafe});
+
+  final CafeModel cafe;
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +44,8 @@ class TLocationMetaData extends StatelessWidget {
               height: 32,
               overlayColor: dark ? TColors.primaryColor : TColors.white,
             ),
-            const TBrandTitleTextWithCupIcon(
-              title: 'Camilia',
+             TBrandTitleTextWithCupIcon(
+              title: cafe.title,
               brandTextSize: TextSizes.large,
               iconColor: TColors.orange,
               textColor: TColors.orange,

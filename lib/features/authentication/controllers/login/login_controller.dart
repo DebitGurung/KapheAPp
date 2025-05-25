@@ -1,3 +1,4 @@
+// File: login_controller.dart
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -5,13 +6,12 @@ import 'package:kapheapp/data/repositories/authentication/authentication_reposit
 import 'package:kapheapp/features/personalization/controllers/user_controller.dart';
 import 'package:kapheapp/utils/popups/full_screen_loader.dart';
 import 'package:kapheapp/utils/popups/loaders.dart';
-
 import '../../../../network_manager/network_manager.dart';
 import '../../../../utils/constants/image_strings.dart';
 
 class LoginController extends GetxController {
   // Variables
-  final rememberMe = false.obs; //obs is an observer
+  final rememberMe = false.obs;
   final hidePassword = true.obs;
   final localStorage = GetStorage();
   final email = TextEditingController();
@@ -21,19 +21,14 @@ class LoginController extends GetxController {
 
   @override
   void onInit() {
-    // Handle potential null values from storage
     email.text = localStorage.read('Remember_Me_email') ?? '';
-    password.text = localStorage.read('Remember_Me_password') ?? '';
     super.onInit();
   }
 
   Future<void> emailAndPasswordSignIn() async {
     try {
-      // Clear previous errors
-      loginFormKey.currentState?.reset();
-
-      TFullScreenLoader.openLoadingDialog(
-          'Logging you in', TImages.docerAnimation);
+      // Start loading
+      TFullScreenLoader.openLoadingDialog('Logging you in', TImages.docerAnimation);
 
       // Check internet connection
       final isConnected = await NetworkManager.instance.isConnected();
@@ -45,30 +40,30 @@ class LoginController extends GetxController {
       }
 
       // Form validation
-      if (!loginFormKey.currentState!.validate()) {
+      if (loginFormKey.currentState == null || !loginFormKey.currentState!.validate()) {
         TFullScreenLoader.stopLoading();
         return;
       }
 
-      // Save ONLY EMAIL if remember me is selected (never store passwords)
+      // Save email if remember me is selected
       if (rememberMe.value) {
         localStorage.write('Remember_Me_email', email.text.trim());
-        localStorage.write(
-            'Remember_Me_password', password.text.trim()); // Clear any existing
+      } else {
+        localStorage.remove('Remember_Me_email');
       }
 
       // Login user
       final userCredentials = await AuthenticationRepository.instance
           .loginWithEmailAndPassword(email.text.trim(), password.text.trim());
 
-// Check if login actually succeeded
+      // Check if login succeeded
       if (userCredentials.user == null) {
         TFullScreenLoader.stopLoading();
         TLoader.errorSnackBar(title: 'Error', message: 'Invalid credentials');
         return;
       }
 
-      // Additional security check
+      // Check email verification
       if (!userCredentials.user!.emailVerified) {
         await AuthenticationRepository.instance.sendEmailVerification();
         TFullScreenLoader.stopLoading();
@@ -87,9 +82,9 @@ class LoginController extends GetxController {
     } catch (e) {
       TFullScreenLoader.stopLoading();
       TLoader.errorSnackBar(
-          title: 'Login Failed',
-          message: _getUserFriendlyError(e.toString()) // Sanitized message
-          );
+        title: 'Login Failed',
+        message: _getUserFriendlyError(e.toString()),
+      );
     }
   }
 
@@ -111,18 +106,15 @@ class LoginController extends GetxController {
         TFullScreenLoader.stopLoading();
         return;
       }
-//google authentication
-      final userCredentials =
-          await AuthenticationRepository.instance.signInWithGoogle();
 
-      //save user record
+      final userCredentials =
+      await AuthenticationRepository.instance.signInWithGoogle();
+
       await userController.saveUserRecord(userCredentials);
 
       TFullScreenLoader.stopLoading();
       AuthenticationRepository.instance.screenRedirect();
-
     } catch (e) {
-      //remove loader
       TFullScreenLoader.stopLoading();
       TLoader.errorSnackBar(title: 'Error', message: e.toString());
     }

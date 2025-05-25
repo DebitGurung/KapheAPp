@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:kapheapp/features/shop/models/cart_item_model.dart';
 import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../images/t_rounded_image.dart';
@@ -11,16 +10,20 @@ import '../../text/t_brand_title_text_with_cup_icon.dart';
 class TCartItem extends StatelessWidget {
   const TCartItem({
     super.key,
+    required this.cartItem,
   });
+
+  final CartItemModel cartItem;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         TRoundedImage(
-          imageUrl: TImages.product12,
+          imageUrl: cartItem.image ?? '',
           width: 60,
           height: 60,
+          isNetworkImage: true,
           padding: const EdgeInsets.all(TSizes.sm),
           backgroundColor: THelperFunctions.isDarkMode(context)
               ? TColors.darkerGrey
@@ -33,19 +36,28 @@ class TCartItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const  TBrandTitleTextWithCupIcon(title: ''),
-            const Flexible(child: TProductTitleText(title: 'Matcha', maxLines: 1)),
-            Text.rich(TextSpan(children: [
+            TBrandTitleTextWithCupIcon(title: cartItem.brand?.name ?? ''),
+            Flexible(
+                child: TProductTitleText(title: cartItem.title, maxLines: 1)),
+            Text.rich(
               TextSpan(
-                  text: 'Additive',
-                  style: Theme.of(context).textTheme.bodySmall),
-              TextSpan(
-                  text: 'Coco', style: Theme.of(context).textTheme.bodyLarge),
-              TextSpan(
-                  text: 'Size', style: Theme.of(context).textTheme.bodySmall),
-              TextSpan(
-                  text: 'Small', style: Theme.of(context).textTheme.bodyLarge),
-            ]))
+                children: (cartItem.selectedVariation ?? {})
+                    .entries
+                    .map(
+                      (e) => TextSpan(
+                    children: [
+                      TextSpan(
+                          text: e.key,
+                          style: Theme.of(context).textTheme.bodySmall),
+                      TextSpan(
+                          text: e.value,
+                          style: Theme.of(context).textTheme.bodyLarge),
+                    ],
+                  ),
+                )
+                    .toList(),
+              ),
+            )
           ],
         )
       ],

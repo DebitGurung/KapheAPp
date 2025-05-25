@@ -4,25 +4,36 @@ import 'package:kapheapp/utils/constants/sizes.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/cafes/sortable/sortable_cafe.dart';
+import '../../models/cafe_category_model.dart';
+import '../../models/cafe_model.dart';
 
 class CafeBranch extends StatelessWidget {
-  const CafeBranch({super.key});
+  const CafeBranch({
+    super.key,
+    required this.cafe,
+    required this.cafeModel});
+
+  final CafeCategoryModel cafe;
+  final CafeModel cafeModel;
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       appBar: TAppBar(
-        title: Text('Camilia'),
+        title: Text(cafe.name),
         showBackArrow: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(TSizes.defaultSpace),
+          padding: const EdgeInsets.all(TSizes.defaultSpace),
           child: Column(
             children: [
-              TCafeCard(showBorder: true),
-              SizedBox(height: TSizes.spaceBtwSections),
-              TSortableCafe(),
+              TCafeCard(
+                showBorder: true,
+                cafe: cafe,
+              ),
+              const SizedBox(height: TSizes.spaceBtwSections),
+              TSortableCafe(cafe: cafe, cafeModel: cafeModel,),
             ],
           ),
         ),

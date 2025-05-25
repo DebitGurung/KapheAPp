@@ -1,33 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BannerModel {
-  final String id; // Firestore document ID
-  final String ImageUrl; // Match exact Firestore field name
-  final String TargetScreen; // Match exact Firestore field name
-  final bool Active; // Match exact Firestore field name
+  final String imageUrl;
+  final String targetScreen;
+  final bool active;
 
   BannerModel({
-    required this.id,
-    required this.ImageUrl,
-    required this.TargetScreen,
-    required this.Active,
+    required this.imageUrl,
+    required this.targetScreen,
+    required this.active,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ImageUrl': ImageUrl, // Must match Firestore field name
-      'TargetScreen': TargetScreen, // Must match Firestore field name
-      'Active': Active, // Must match Firestore field name
-    };
-  }
 
   factory BannerModel.fromSnapshot(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;
+    // Sanitize imageUrl by removing extra quotes
+    String rawImageUrl = (data['ImageUrl'] as String?) ?? '';
+    String sanitizedImageUrl = rawImageUrl.replaceAll('"', '').trim();
     return BannerModel(
-      id: snapshot.id, // Capture Firestore document ID
-      ImageUrl: data['ImageUrl'] ?? '',
-      TargetScreen: data['TargetScreen'] ?? '',
-      Active: data['Active'] ?? false,
+      imageUrl: sanitizedImageUrl.isNotEmpty
+          ? sanitizedImageUrl
+          : 'assets/images/placeholder.png',
+      targetScreen: data['TargetScreen'] as String? ?? '',
+      active: data['Active'] as bool? ?? false,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ImageUrl': imageUrl,
+      'TargetScreen': targetScreen,
+      'Active': active,
+    };
   }
 }

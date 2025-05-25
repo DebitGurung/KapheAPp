@@ -45,12 +45,12 @@ dependencies:
   flutter_dotenv: ^5.2.1
   file_picker: ^10.1.2
   cloudinary_sdk: ^5.0.0+1
-
+  collection: ^1.18.0  # Add this line (use the latest version available)
+  flutter_native_splash: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  flutter_native_splash: ^2.4.1
 
 flutter:
   uses-material-design: true

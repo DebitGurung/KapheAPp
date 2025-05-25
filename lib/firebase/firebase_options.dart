@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart'
 ///
 /// Example:
 /// ```dart
-/// import 'firebase_options.dart';
 /// // ...
 /// await Firebase.initializeApp(
 ///   options: DefaultFirebaseOptions.currentPlatform,
@@ -31,7 +30,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       default:
         throw UnsupportedError(
@@ -41,50 +40,51 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDY3uEt6C2RiKiNgXVJW-fGryUSKL8_EVM',
-    appId: '1:394315006257:web:b01655643baa2930aef010',
-    messagingSenderId: '394315006257',
-    projectId: 'kaphe-f480c',
-    authDomain: 'kaphe-f480c.firebaseapp.com',
-    storageBucket: 'kaphe-f480c.firebasestorage.app',
+    apiKey: 'AIzaSyADhjR2tO24G5ziwNwSycfyuHoatdFzmOI',
+    appId: '1:968858113254:web:2e2ce4409d429059681727',
+    messagingSenderId: '968858113254',
+    projectId: 'kaphe-a1d34',
+    authDomain: 'kaphe-a1d34.firebaseapp.com',
+    storageBucket: 'kaphe-a1d34.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyACqDtqfiUN5EkC8GfCV_fhpWdy08ayvKk',
-    appId: '1:394315006257:android:40ae1c76184dcb66aef010',
-    messagingSenderId: '394315006257',
-    projectId: 'kaphe-f480c',
-    storageBucket: 'kaphe-f480c.firebasestorage.app',
+    apiKey: 'AIzaSyBdQSm2KB-pH0ntRAnhKptH3aLGIorl0bM',
+    appId: '1:968858113254:android:0e57b5cbbcb3ede4681727',
+    messagingSenderId: '968858113254',
+    projectId: 'kaphe-a1d34',
+    storageBucket: 'kaphe-a1d34.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCrVZLD6vaxRXiG-by7CKZeZwVzm7UdXNY',
-    appId: '1:394315006257:ios:618d53d49ce6f677aef010',
-    messagingSenderId: '394315006257',
-    projectId: 'kaphe-f480c',
-    storageBucket: 'kaphe-f480c.firebasestorage.app',
-    androidClientId: '394315006257-3i6bb27nhfh9q7t9o0hvrku47r8ckk7m.apps.googleusercontent.com',
-    iosClientId: '394315006257-hnnitolp1i2sl1q6cp7ttmt6k1vr5kur.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCBashKQR61TmewcKG_stmWpNOmjd30qe8',
+    appId: '1:968858113254:ios:7997c271f459a24e681727',
+    messagingSenderId: '968858113254',
+    projectId: 'kaphe-a1d34',
+    storageBucket: 'kaphe-a1d34.firebasestorage.app',
+    androidClientId: '968858113254-uoam48h0re2clifjutflj9d8ouu8jah5.apps.googleusercontent.com',
+    iosClientId: '968858113254-9u46urdrte75kge8ecdo7n09q56r8spm.apps.googleusercontent.com',
     iosBundleId: 'com.example.kapheapp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCrVZLD6vaxRXiG-by7CKZeZwVzm7UdXNY',
-    appId: '1:394315006257:ios:618d53d49ce6f677aef010',
-    messagingSenderId: '394315006257',
-    projectId: 'kaphe-f480c',
-    storageBucket: 'kaphe-f480c.firebasestorage.app',
-    androidClientId: '394315006257-3i6bb27nhfh9q7t9o0hvrku47r8ckk7m.apps.googleusercontent.com',
-    iosClientId: '394315006257-hnnitolp1i2sl1q6cp7ttmt6k1vr5kur.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCBashKQR61TmewcKG_stmWpNOmjd30qe8',
+    appId: '1:968858113254:ios:7997c271f459a24e681727',
+    messagingSenderId: '968858113254',
+    projectId: 'kaphe-a1d34',
+    storageBucket: 'kaphe-a1d34.firebasestorage.app',
+    androidClientId: '968858113254-uoam48h0re2clifjutflj9d8ouu8jah5.apps.googleusercontent.com',
+    iosClientId: '968858113254-9u46urdrte75kge8ecdo7n09q56r8spm.apps.googleusercontent.com',
     iosBundleId: 'com.example.kapheapp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDY3uEt6C2RiKiNgXVJW-fGryUSKL8_EVM',
-    appId: '1:394315006257:web:654ef93fe730d52baef010',
-    messagingSenderId: '394315006257',
-    projectId: 'kaphe-f480c',
-    authDomain: 'kaphe-f480c.firebaseapp.com',
-    storageBucket: 'kaphe-f480c.firebasestorage.app',
+    apiKey: 'AIzaSyADhjR2tO24G5ziwNwSycfyuHoatdFzmOI',
+    appId: '1:968858113254:web:5bac3233d0dcd1dc681727',
+    messagingSenderId: '968858113254',
+    projectId: 'kaphe-a1d34',
+    authDomain: 'kaphe-a1d34.firebaseapp.com',
+    storageBucket: 'kaphe-a1d34.firebasestorage.app',
   );
+
 }

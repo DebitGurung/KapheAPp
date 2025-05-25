@@ -11,53 +11,57 @@ import 'package:get_storage/get_storage.dart';
 
 import 'app.dart';
 import 'firebase/firebase_options.dart';
+import 'utils/local_storage/storage_utility.dart';
 
 Future<void> main() async {
-  //ensure flutter bindings are initialized
+  // Ensure Flutter bindings are initialized
   final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
-  //preserve splash screen
+  // Initialize TLocalStorage FIRST
+  await TLocalStorage.init();
+
+  // Preserve splash screen
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  //initialize local storage
+  // Initialize local storage
   await GetStorage.init();
 
-  // Prevent duplicate Firebase initialization robust firebase initialization
-  try {
-    final defaultAppExists = Firebase.apps.any((app) => app.name == '[DEFAULT]');
-    if (!defaultAppExists) {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-    }
-  } on FirebaseException catch (e) {
-    if (e.code == 'duplicate-app') {
-      Firebase.app(); // Sync with native instance
-    } else {
-      debugPrint('Firebase Error: ${e.message}');
-    }
+  // Prevent duplicate Firebase initialization
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   }
-  //initialize firebase app check
+
+  // Initialize Firebase App Check
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.debug,
     appleProvider: AppleProvider.debug,
-  );
+  ).catchError((e) {
+    debugPrint('App Check Error: $e');
+  });
 
-  //load environment variable
+  // Load environment variables
   await dotenv.load(fileName: ".env");
 
-  //initialize cloudinary
-  final cloudinary = Cloudinary.full(
-    cloudName: dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '',
-    apiKey: dotenv.env['CLOUDINARY_API_KEY'] ?? '',
-    apiSecret: dotenv.env['CLOUDINARY_API_SECRET'] ?? '',
-  );
+  // Initialize Cloudinary
+  final cloudName = dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '';
+  final apiKey = dotenv.env['CLOUDINARY_API_KEY'] ?? '';
+  final apiSecret = dotenv.env['CLOUDINARY_API_SECRET'] ?? '';
+  if (cloudName.isEmpty || apiKey.isEmpty || apiSecret.isEmpty) {
+    debugPrint('Cloudinary configuration missing in .env file');
+  } else {
+    final cloudinary = Cloudinary.full(
+      cloudName: cloudName,
+      apiKey: apiKey,
+      apiSecret: apiSecret,
+    );
+    Get.put<Cloudinary>(cloudinary);
+  }
 
-  //register dependencies
-  Get.put<Cloudinary>(cloudinary);
-
-  //remove splash screen after initialization
+  // Remove splash screen after initialization
   FlutterNativeSplash.remove();
-  //run app
+
+  // Run app
   runApp(const App());
 }

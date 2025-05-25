@@ -4,7 +4,7 @@ import 'package:kapheapp/utils/constants/image_strings.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Ensure FirebaseAuthException is imported
 
 import '../../../../data/repositories/authentication/authentication_repository.dart';
-import '../../../../data/repositories/user/user_model.dart';
+import '../../../shop/models/user_model.dart';
 import '../../../../data/repositories/user/user_repository.dart';
 import '../../../../network_manager/network_manager.dart';
 import '../../../../utils/popups/full_screen_loader.dart';

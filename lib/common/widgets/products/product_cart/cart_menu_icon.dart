@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:kapheapp/utils/helpers/helper_functions.dart';
+import '../../../../features/shop/controllers/product/cart_controller.dart';
+import '../../../../features/shop/screens/cart/cart.dart';
 import '../../../../utils/constants/colors.dart';
-
 
 class TCartCounterIcon extends StatelessWidget {
   const TCartCounterIcon({
     super.key,
-    required this.onPress,
-     this.iconColor,
-
+    this.iconColor,
+    this.counterBgColor,
+    this.counterTextColor,
   });
 
-  final VoidCallback onPress;
-  final Color? iconColor;
+  final Color? iconColor, counterBgColor, counterTextColor;
+
   @override
   Widget build(BuildContext context) {
+    //get an instance of the cart controller
+    final controller = Get.put(CartController());
+
+    final dark = THelperFunctions.isDarkMode(context);
     return Stack(
       children: [
         IconButton(
-            onPressed: onPress,
+            onPressed: () => Get.to(() => const CartScreen()),
             icon: Icon(
-              Icons.shopping_cart,
+              Icons.local_drink_outlined,
               color: iconColor,
             )),
         Positioned(
@@ -28,17 +35,18 @@ class TCartCounterIcon extends StatelessWidget {
             width: 18,
             height: 18,
             decoration: BoxDecoration(
-              color: TColors.black,
+              color: counterBgColor ?? (dark ? TColors.white : TColors.black),
               borderRadius: BorderRadius.circular(100),
             ),
             child: Center(
-              child: Text('',
-                style: Theme.of(context)
-                    .textTheme
-                    .labelLarge!
-                    .apply(
-                    color: TColors.white,
-                    fontSizeFactor: 0.8),
+              child: Obx(
+                () => Text(
+                  controller.noOfCartItems.value.toString(),
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelLarge!
+                      .apply(color: TColors.white, fontSizeFactor: 0.8),
+                ),
               ),
             ),
           ),

@@ -1,39 +1,61 @@
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:kapheapp/common/widgets/products/favourite_icon/favourite_icon.dart';
 
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/custom_shapes/curved_edges/curved_edges.dart';
-import '../../../../../common/widgets/icons/t_circular_icon.dart';
 import '../../../../../common/widgets/images/t_rounded_image.dart';
 import '../../../../../utils/constants/colors.dart';
-import '../../../../../utils/constants/image_strings.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/helpers/helper_functions.dart';
+import '../../../controllers/product/images_controller.dart';
+import '../../../models/product_model.dart';
 
 class TProductImageSlider extends StatelessWidget {
   const TProductImageSlider({
     super.key,
     required this.dark,
+    required this.product,
   });
 
   final bool dark;
+  final ProductModel product;
 
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
+
+    final controller = Get.put(ImageController());
+    final image = controller.getAllProductImages(product);
     return TCurvedEdgeWidget(
       child: Container(
         color: dark ? TColors.darkerGrey : TColors.light,
         child: Stack(
           children: [
-            const SizedBox(
+            //main large image
+            SizedBox(
                 height: 400,
                 child: Padding(
                   padding: EdgeInsets.all(TSizes.productImageRadius * 2),
                   child: Center(
-                    child: Image(image: AssetImage(TImages.product10)),
+                    child: Obx(() {
+                      final image = controller.selectedProductImage.value;
+                      return GestureDetector(
+                        onTap: () => controller.showEnlargedImage(image),
+                        child: CachedNetworkImage(
+                          imageUrl: image,
+                          progressIndicatorBuilder: (_, __, downloadProgress) =>
+                              CircularProgressIndicator(
+                                  value: downloadProgress.progress,
+                                  color: TColors.primaryColor),
+                        ),
+                      );
+                    }),
                   ),
                 )),
+
+            //image slider
             Positioned(
               right: 0,
               bottom: 30,
@@ -41,28 +63,38 @@ class TProductImageSlider extends StatelessWidget {
               child: SizedBox(
                 height: 80,
                 child: ListView.separated(
-                  itemCount: 2,
+                  itemCount: image.length,
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   physics: const AlwaysScrollableScrollPhysics(),
                   separatorBuilder: (_, __) =>
-                  const SizedBox(width: TSizes.spaceBtwItems),
-                  itemBuilder: (_, index) => TRoundedImage(
+                      const SizedBox(width: TSizes.spaceBtwItems),
+                  itemBuilder: (_, index) => Obx(() {
+                    final imageSelected =
+                        controller.selectedProductImage.value == image[index];
+                    return TRoundedImage(
                       width: 80,
+                      isNetworkImage: true,
                       backgroundColor: dark ? TColors.dark : TColors.white,
-                      border: Border.all(color: TColors.primaryColor),
                       padding: const EdgeInsets.all(TSizes.sm),
-                      imageUrl: TImages.product12),
+                      imageUrl: image[index],
+                      onPressed: () =>
+                          controller.selectedProductImage.value = image[index],
+                      border: Border.all(
+                          color: imageSelected
+                              ? TColors.primaryColor
+                              : Colors.transparent),
+                    );
+                  }),
                 ),
               ),
             ),
 
-            const TAppBar(
+             TAppBar(
               showBackArrow: true,
               actions: [
-                  TCircularIcon(icon: Icons.favorite,color: Colors.red,)
+              TFavouriteIcon(productId: product.id,),
               ],
-
             )
           ],
         ),

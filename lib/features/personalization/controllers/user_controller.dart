@@ -8,7 +8,7 @@ import 'package:kapheapp/network_manager/network_manager.dart';
 import 'package:kapheapp/utils/popups/full_screen_loader.dart';
 import 'package:kapheapp/utils/popups/loaders.dart';
 
-import '../../../data/repositories/user/user_model.dart';
+import '../../shop/models/user_model.dart';
 import '../../../utils/constants/image_strings.dart';
 import '../../../utils/constants/sizes.dart';
 import '../../authentication/screens/login/login.dart';

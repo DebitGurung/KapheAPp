@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kapheapp/features/shop/controllers/product/cart_controller.dart';
+import 'package:kapheapp/utils/helpers/price_calculator.dart';
 
 import '../../../../../utils/constants/sizes.dart';
 
@@ -7,6 +9,8 @@ class TBillingAmountSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartController = CartController.instance;
+    final subTotal = cartController.totalCartPrice.value;
     return Column(
       children: [
         Row(
@@ -17,12 +21,14 @@ class TBillingAmountSection extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             Text(
-              'Rs 280',
+              'Rs $subTotal',
               style: Theme.of(context).textTheme.bodyMedium,
             )
           ],
         ),
-        const SizedBox(height: TSizes.spaceBtwItems/2,),
+        const SizedBox(
+          height: TSizes.spaceBtwItems / 2,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -31,12 +37,30 @@ class TBillingAmountSection extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             Text(
-              'Rs 50',
+              'Rs ${TPriceCalculator.calculateDeliveryCost(subTotal, 'Pokhara')}',
               style: Theme.of(context).textTheme.labelLarge,
             )
           ],
         ),
-        const SizedBox(height: TSizes.spaceBtwItems/2,),
+        const SizedBox(
+          height: TSizes.spaceBtwItems / 2,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Tax fee',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            Text(
+              'Rs ${TPriceCalculator.calculateTaxAmount(subTotal, 'Pokhara')}',
+              style: Theme.of(context).textTheme.titleMedium,
+            )
+          ],
+        ),
+        const SizedBox(
+          height: TSizes.spaceBtwItems / 2,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -45,7 +69,7 @@ class TBillingAmountSection extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             Text(
-              'Rs 550',
+              'Rs ${TPriceCalculator.calculateTotalPrice(subTotal, 'Pokhara')}',
               style: Theme.of(context).textTheme.titleMedium,
             )
           ],

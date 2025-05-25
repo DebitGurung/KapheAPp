@@ -1,129 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:kapheapp/common/widgets/custom_shapes/rounded_container.dart';
-import 'package:kapheapp/common/widgets/product_price/product_price_text.dart';
-import 'package:kapheapp/common/widgets/text/product_title_text.dart';
-import 'package:kapheapp/common/widgets/text/section_heading.dart';
-
-import '../../../../../common/choice_chip/choice_chip.dart';
-import '../../../../../utils/constants/colors.dart';
-import '../../../../../utils/constants/sizes.dart';
-import '../../../../../utils/helpers/helper_functions.dart';
+import 'package:get/get.dart';
+import 'package:kapheapp/features/shop/controllers/product/variation_controller.dart';
+import 'package:kapheapp/features/shop/models/product_model.dart';
+import 'package:kapheapp/utils/constants/sizes.dart';
 
 class TProductAttribute extends StatelessWidget {
-  const TProductAttribute({super.key});
+  const TProductAttribute({super.key, required this.product});
+
+  final ProductModel product;
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunctions.isDarkMode(context);
-    return Column(
-      children: [
-        TRoundedContainer(
-          padding: const EdgeInsets.all(TSizes.md),
-          backgroundColor: dark ? TColors.darkGrey : TColors.grey,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  const TSectionHeading(
-                    title: 'Offers',
-                    showActionButton: false,
-                  ),
-                  const SizedBox(
-                    width: TSizes.spaceBtwItems,
-                  ),
+    final controller = VariationController.instance;
 
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const TProductTitleText(
-                            title: 'Price',
-                            smallSize: true,
-                          ),
-                          const SizedBox(
-                            width: TSizes.spaceBtwItems,
-                          ),
-                          Text(
-                            'Rs 180',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge!
-                                .apply(decoration: TextDecoration.lineThrough),
-                          ),
-                          //discount price
-                          const TProductPriceText(price: '110')
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const TProductTitleText(
-                            title: 'Status',
-                            smallSize: true,
-                          ),
-                          Text(
-                            'Available',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  //actual price
-                ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: product.attributes.map((attribute) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                attribute.name,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
-              //discount description
-              const TProductTitleText(
-                title:
-                    'Freshen up your day with our affagato with fine quality beans',
-                smallSize: true,
-                maxLines: 4,
-              )
+              const SizedBox(height: TSizes.spaceBtwItems / 2),
+              Obx(() {
+                final availableValues = controller.getAttributesAvailabilityInVariation(product.variations, attribute.name);
+                return Wrap(
+                  spacing: TSizes.sm,
+                  runSpacing: TSizes.sm,
+                  children: (attribute.values ?? []).map((value) {
+                    final isSelected = controller.selectedAttributes[attribute.name]?.toString() == value;
+                    final isAvailable = availableValues.contains(value);
+                    return ChoiceChip(
+                      label: Text(value.toString()),
+                      selected: isSelected,
+                      onSelected: isAvailable
+                          ? (selected) {
+                        if (selected) {
+                          controller.onAttributeSelected(product, attribute.name, value);
+                        }
+                      }
+                          : null,
+                      selectedColor: Theme.of(context).primaryColor,
+                      labelStyle: TextStyle(
+                        color: isSelected ? Colors.white : (isAvailable ? Colors.black : Colors.grey),
+                      ),
+                      backgroundColor: isAvailable ? Colors.grey[200] : Colors.grey[400],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(TSizes.sm),
+                        side: BorderSide(
+                          color: isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                );
+              }),
             ],
           ),
-        ),
-        const SizedBox(height: TSizes.spaceBtwItems),
-
-        //attributes
-        Column(
-          children: [
-            const TSectionHeading(
-              title: 'Additives',
-              showActionButton: false,
-            ),
-            const SizedBox(height: TSizes.spaceBtwItems / 2),
-            Wrap(spacing: 8, children: [
-              TChoiceChip(
-                  text: 'Choco', selected: true, onSelected: (value) {}),
-              TChoiceChip(
-                  text: 'Butter', selected: false, onSelected: (value) {}),
-              TChoiceChip(
-                  text: 'Chips', selected: false, onSelected: (value) {}),
-            ])
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const TSectionHeading(
-              title: 'Sizes',
-              showActionButton: false,
-            ),
-            const SizedBox(height: TSizes.spaceBtwItems / 2),
-            Wrap(
-              spacing: 8,
-              children: [
-                TChoiceChip(
-                    text: 'Small', selected: true, onSelected: (value) {}),
-                TChoiceChip(
-                    text: 'Medium', selected: false, onSelected: (value) {}),
-                TChoiceChip(
-                    text: 'Large', selected: false, onSelected: (value) {}),
-              ],
-            )
-          ],
-        )
-      ],
+        );
+      }).toList(),
     );
   }
 }

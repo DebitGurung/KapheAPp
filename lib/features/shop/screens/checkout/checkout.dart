@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kapheapp/common/widgets/custom_shapes/rounded_container.dart';
-import 'package:kapheapp/common/widgets/success_screen/success_screen.dart';
+import 'package:kapheapp/features/shop/controllers/product/cart_controller.dart';
 import 'package:kapheapp/features/shop/screens/cart/widgets/cart_items.dart';
+import 'package:kapheapp/features/shop/screens/checkout/widgets/billing_address_section.dart';
 import 'package:kapheapp/features/shop/screens/checkout/widgets/billing_amount_section.dart';
 import 'package:kapheapp/features/shop/screens/checkout/widgets/billing_payment_section.dart';
-import 'package:kapheapp/navigation/navigation_menu.dart';
 import 'package:kapheapp/utils/constants/colors.dart';
 import 'package:kapheapp/utils/constants/sizes.dart';
+import 'package:kapheapp/utils/helpers/price_calculator.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/products/product_cart/coupon_widget.dart';
-import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/helpers/helper_functions.dart';
+import '../../../../utils/popups/loaders.dart';
+import '../../controllers/order/order_controller.dart';
 
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cartController = CartController.instance;
+    final subTotal = cartController.totalCartPrice.value;
+
+    final orderController = Get.put(OrderController());
+    final totalAmount = TPriceCalculator.calculateTotalPrice(subTotal, 'Pokhara');
     final dark = THelperFunctions.isDarkMode(context);
     return Scaffold(
       appBar: TAppBar(
@@ -53,7 +60,13 @@ class CheckoutScreen extends StatelessWidget {
                       TBillingPaymentSection(),
                       SizedBox(
                         height: TSizes.spaceBtwItems,
-                      )
+                      ),
+                      Divider(),
+                      SizedBox(
+                        height: TSizes.spaceBtwItems,
+                      ),
+
+                      TBillingAddressSection(),
                     ],
                   ))
             ],
@@ -63,15 +76,10 @@ class CheckoutScreen extends StatelessWidget {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(TSizes.defaultSpace),
         child: ElevatedButton(
-            onPressed: () => Get.to(
-                  () => SuccessScreen(
-                    image: TImages.staticSuccessIllustration,
-                    title: 'Payment successful',
-                    subTitle: 'Your drink will be delivered to you',
-                    onPressed: () => Get.to(() => const NavigationMenu()),
-                  ),
-                ),
-            child: const Text('Checkout Rs 500')),
+            onPressed: subTotal > 0 ?
+            () => orderController.processOrder(totalAmount) 
+            : () => TLoader.warningSnackBar(title: 'Empty cart', message: 'Add drinks in the cart to continue.'),
+            child:  Text('Checkout Rs$totalAmount')),
       ),
     );
   }

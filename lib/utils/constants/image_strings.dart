@@ -21,21 +21,17 @@ class TImages {
   static const String tea = 'assets/images/icons/tea.png';
   static const String wishlist = 'assets/images/icons/wishlist.png';
 
-  static const String onBoardingImage1 =
-      'assets/images/on_boarding_images/onboarding2.json';
-  static const String onBoardingImage2 =
-      'assets/images/on_boarding_images/onboarding1.json';
-  static const String onBoardingImage3 =
-      'assets/images/on_boarding_images/onboarding3.json';
+  static const String onBoardingImage1 = 'assets/animation/onboarding2.json';
+  static const String onBoardingImage2 = 'assets/animation/onboarding1.json';
+  static const String onBoardingImage3 = 'assets/animation/onboarding3.json';
 
 //animations
-  static const String deliveredEmailIllustration = 'assets/animation/sentEmail.json';
+  static const String deliveredEmailIllustration =
+      'assets/animation/sentEmail.json';
   static const String staticSuccessIllustration =
       'assets/animation/right mark.json';
-  static const String deliveredIllustration =
-      'assets/animation/delivery.json';
-  static const String verifyIllustration =
-      'assets/animation/sentEmail.json';
+  static const String deliveredIllustration = 'assets/animation/delivery.json';
+  static const String verifyIllustration = 'assets/animation/sentEmail.json';
 
 //banner
   static const String promoBanner1 = 'assets/images/banners/promo-banner-1.jpg';
@@ -90,4 +86,24 @@ class TImages {
   //success animation
   static const String successfullyRegisterAnimation =
       'assets/animation/success.json';
+
+  //wishlist animation
+  static const String emptyWishlist =
+      'assets/animation/emptyWishlist.json';
+
+  //payment
+  static const String cod = 'assets/images/icons/transaction.png';
+  static const String esewa = 'assets/images/icons/esewa.png';
+
+  //processing animation
+  static const String processing =
+      'assets/animation/processing.json';
+
+  //order success
+  static const String orderSuccess =
+      'assets/animation/orderSuccess.json';
+
+
+
+
 }

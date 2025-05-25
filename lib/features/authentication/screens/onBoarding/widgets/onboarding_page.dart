@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart'; // Add this import
 import 'package:kapheapp/utils/constants/sizes.dart';
 import 'package:kapheapp/utils/helpers/helper_functions.dart'
     show THelperFunctions;
@@ -11,16 +12,19 @@ class OnBoardingPage extends StatelessWidget {
     required this.subTitle,
   });
   final String image, title, subTitle;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(TSizes.defaultSpace),
       child: Column(
         children: [
-          Image(
+          // Modified Lottie widget with same sizing
+          Lottie.asset(
+            image,
             width: THelperFunctions.screenWidth() * 0.8,
             height: THelperFunctions.screenHeight() * 0.6,
-            image: AssetImage(image),
+            fit: BoxFit.contain,
           ),
           Text(
             title,

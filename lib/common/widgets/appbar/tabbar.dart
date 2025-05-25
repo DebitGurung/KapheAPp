@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:kapheapp/utils/device/device_utility.dart';
-
 import '../../../utils/constants/colors.dart';
 import '../../../utils/helpers/helper_functions.dart';
 
-class TTabBar extends StatelessWidget implements PreferredSize {
+class TTabBar extends StatelessWidget implements PreferredSizeWidget {
   const TTabBar({super.key, required this.tabs});
 
   final List<Widget> tabs;
+
+
   @override
   Widget build(BuildContext context) {
+    // Handle empty tabs to prevent RangeError
+    if (tabs.isEmpty) {
+      return const SizedBox.shrink(); // Return an empty widget if no tabs
+    }
+
     final dark = THelperFunctions.isDarkMode(context);
     return Material(
       color: dark ? TColors.black : TColors.white,
@@ -24,10 +30,5 @@ class TTabBar extends StatelessWidget implements PreferredSize {
   }
 
   @override
-  // TODO: implement child
-  Widget get child => throw UnimplementedError();
-
-  @override
-  // TODO: implement preferredSize
   Size get preferredSize => Size.fromHeight(TDeviceUtils.getAppBarHeight());
 }
